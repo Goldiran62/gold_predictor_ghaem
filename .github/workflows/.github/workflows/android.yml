@@ -1,0 +1,27 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java & Python & Buildozer
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip git zip unzip openjdk-8-jdk
+          pip3 install --upgrade pip buildozer
+
+      - name: Build APK
+        run: buildozer android debug
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: gold_predictor_ghaem-APK
+          path: bin/*.apk
